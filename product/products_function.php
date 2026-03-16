@@ -30,4 +30,36 @@
         } else {
             return false;
         }
+
     }
+
+    function deleteProduct($conn, $data){
+        $id = $data['id'];
+        $sql = "DELETE FROM products WHERE id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $id);
+        if ($stmt->execute() === TRUE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function updateProduct($conn, $data){
+        $id = $data['id'];
+        $name = $data['name'];
+        $category = $data['category'];
+        $price = $data['price'];
+        $stock = $data['stock'];
+
+        $sql = "UPDATE products SET name=?, category=?, price=?, stock=? WHERE id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sssss", $name, $category, $price, $stock, $id);
+        if ($stmt->execute() === TRUE) {
+            return true;
+        } else {
+            return false;
+        }
+     }
+            
+    

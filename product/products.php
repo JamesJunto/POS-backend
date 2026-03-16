@@ -17,6 +17,22 @@ switch ($_SERVER['REQUEST_METHOD']) {
             echo json_encode(["message" => "Failed to add product"]);
         }
         break;
+    case 'DELETE':
+        $data = json_decode(file_get_contents("php://input"), true);
+        if (deleteProduct($conn, $data)) {
+            echo json_encode(["message" => "Product deleted successfully"]);
+        } else {
+            echo json_encode(["message" => "Failed to delete product"]);
+        }
+        break;
+    case 'PUT':
+        $data = json_decode(file_get_contents("php://input"), true);
+        if (updateProduct($conn, $data)) {
+            echo json_encode(["message" => "Product updated successfully"]);
+        } else {
+            echo json_encode(["message" => "Failed to update product"]);
+        }
+        break;
     default:
         echo json_encode(["message" => "Method Not Allowed"]);
 }
