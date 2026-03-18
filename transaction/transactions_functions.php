@@ -21,3 +21,21 @@ function getRecentTransactions($conn){
     return $transactions;
 
 }
+
+function createTransaction($conn, $data){
+    $transaction_id = $data['transaction_id'];
+    $product_id = $data['product_id'];
+    $quantity = $data['quantity'];
+    $price = $data['price'];
+    $total = $quantity * $price;
+
+    $sql = "INSERT INTO transactions (transaction_id, product_id, quantity, price, total) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("siiii", $transaction_id, $product_id, $quantity, $price, $total);
+    if ($stmt->execute() === TRUE) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
