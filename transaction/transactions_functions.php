@@ -27,15 +27,21 @@ function createTransaction($conn, $data){
     $product_id = $data['product_id'];
     $quantity = $data['quantity'];
     $price = $data['price'];
+    $stock = $data['stock'];
     $total = $quantity * $price;
+
 
     $sql = "INSERT INTO transactions (transaction_id, product_id, quantity, price, total) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("siiii", $transaction_id, $product_id, $quantity, $price, $total);
-    if ($stmt->execute() === TRUE) {
+    $stmt->bind_param("siiii", $transaction_id, $product_id, $quantity, $price,  $total);
+    $success = $stmt->execute();
+
+    if ($success) {
+        $updatedProduct = $conn->prepare("UPDATE products SET stock =  ? WHERE id = ?");
+        $updatedProduct->bind_param("ii", $stock, $product_id);
+        $updatedProduct->execute();
         return true;
     } else {
         return false;
     }
-
 }
