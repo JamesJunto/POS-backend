@@ -2,14 +2,22 @@
 require_once("../connection.php");
 require_once("../cors.php");
 
-function getRecentTransactions($conn){
+function getRecentTransactions($conn)
+{
 
-    $sql = "SELECT t.transaction_id, t.quantity, t.price, t.transaction_date, (t.quantity * t.price) AS total, p.name AS product_name, p.price AS product_current_price
+ $sql = "SELECT 
+  t.transaction_id, 
+  p.name AS product_name,
+  t.price, 
+  t.quantity, 
+  (t.quantity * t.price) AS total, 
+  p.price AS product_current_price,
+  t.transaction_date
     FROM transactions t
     JOIN products p
     ON t.product_id = p.id
     ORDER BY t.transaction_date DESC
-    LIMIT 5;";
+    LIMIT 5";
 
     $result = $conn->query($sql);
     $transactions = [];
@@ -22,7 +30,8 @@ function getRecentTransactions($conn){
 
 }
 
-function createTransaction($conn, $data){
+function createTransaction($conn, $data)
+{
     $transaction_id = $data['transaction_id'];
     $product_id = $data['product_id'];
     $quantity = $data['quantity'];
@@ -32,7 +41,7 @@ function createTransaction($conn, $data){
 
     $sql = "INSERT INTO transactions (transaction_id, product_id, quantity, price, total) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("siiii", $transaction_id, $product_id, $quantity, $price,  $total);
+    $stmt->bind_param("siiii", $transaction_id, $product_id, $quantity, $price, $total);
     $success = $stmt->execute();
 
     if ($success) {
@@ -41,7 +50,7 @@ function createTransaction($conn, $data){
         $updatedProduct->execute();
 
         return true;
-    }else{
+    } else {
         return false;
     }
 }
