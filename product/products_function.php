@@ -4,7 +4,7 @@
   require_once("../cors.php");
 
     function getProducts($conn) {
-        $sql = "SELECT * FROM products";
+        $sql = "SELECT * FROM products WHERE status = 1";
         $result = $conn->query($sql);
         $products = [];
         if ($result->num_rows > 0) {
@@ -34,15 +34,48 @@
     }
 
     function deleteProduct($conn, $data){
-        $id = $data['id'];
-        $sql = "DELETE FROM products WHERE id=?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $id);
-        if ($stmt->execute() === TRUE) {
-            return true;
-        } else {
-            return false;
+        if (!isset($data['id'])) {
+            return [
+                "success" => false,
+                "message" => "Product id is required",
+                "code" => 400,
+            ];
         }
+
+        $id = (int) $data['id'];
+        if ($id <= 0) {
+            return [
+                "success" => false,
+                "message" => "Invalid product id",
+                "code" => 400,
+            ];
+        }
+
+        $sql = "UPDATE products SET status = 0 WHERE id = ? AND status = 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+
+        if ($stmt->execute() !== TRUE) {
+            return [
+                "success" => false,
+                "message" => "Failed to archive product",
+                "code" => 500,
+            ];
+        }
+
+        if ($stmt->affected_rows === 0) {
+            return [
+                "success" => false,
+                "message" => "Product not found or already archived",
+                "code" => 404,
+            ];
+        }
+
+        return [
+            "success" => true,
+            "message" => "Product archived successfully",
+            "code" => 200,
+        ];
     }
 
     function updateProduct($conn, $data){

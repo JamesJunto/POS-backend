@@ -19,11 +19,12 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
     case 'DELETE':
         $data = json_decode(file_get_contents("php://input"), true);
-        if (deleteProduct($conn, $data)) {
-            echo json_encode(["message" => "Product deleted successfully"]);
-        } else {
-            echo json_encode(["message" => "Failed to delete product"]);
-        }
+        $result = deleteProduct($conn, $data);
+        http_response_code($result['code']);
+        echo json_encode([
+            "success" => $result['success'],
+            "message" => $result['message'],
+        ]);
         break;
     case 'PUT':
         $data = json_decode(file_get_contents("php://input"), true);
