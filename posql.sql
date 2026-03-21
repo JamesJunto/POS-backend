@@ -24,6 +24,10 @@ CREATE TABLE transactions (
     product_id INT NOT NULL,
     quantity INT NOT NULL,
     price DECIMAL(10,2) NOT NULL,
+    total DECIMAL(10,2) NOT NULL,
     transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
+
+ALTER TABLE transactions
+ADD COLUMN IF NOT EXISTS total DECIMAL(10,2) NOT NULL DEFAULT 0.00;
