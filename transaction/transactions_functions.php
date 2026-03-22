@@ -17,7 +17,7 @@ function getRecentTransactions($conn)
     JOIN products p
     ON t.product_id = p.id
     ORDER BY t.transaction_date DESC
-    LIMIT 5";
+    ";
 
     $result = $conn->query($sql);
     $transactions = [];
