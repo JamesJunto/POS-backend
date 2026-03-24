@@ -61,8 +61,10 @@ function getRecentTransactions($conn)
             $item['quantity']
         );
         $stmtItem->execute();
+        
+        
 
-        $newStock = $item['stock'] - $item['quantity'];
+        $newStock = $item['stock'];
         $updateStock = $conn->prepare("UPDATE products SET stock = ? WHERE id = ?");
         $updateStock->bind_param("ii", $newStock, $item['product_id']);
         $updateStock->execute();

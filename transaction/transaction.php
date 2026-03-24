@@ -14,8 +14,8 @@ case 'POST':
     $input = json_decode(file_get_contents("php://input"), true);
 
     $transaction = $input['transaction']; 
-    $items = $input['items'];           
-
+    $items = $input['items']; 
+    
     $result = createTransaction($conn, $transaction, $items);
 
     if ($result) {
