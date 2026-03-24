@@ -3,22 +3,32 @@ USE pos_system;
 
 CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    NAME VARCHAR(100) NOT NULL,
     category VARCHAR(50) NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     stock INT NOT NULL,
-    status BOOLEAN NOT NULL DEFAULT TRUE
+    STATUS BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    NAME VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    PASSWORD VARCHAR(255) NOT NULL,
     registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    transaction_id VARCHAR(50) NOT NULL UNIQUE,
+    customer_name VARCHAR(200) NOT NULL,
+    cash DECIMAL(10,2) NOT NULL,
+    total DECIMAL(10,2) NOT NULL,
+    change_amount DECIMAL(10,2) NOT NULL,
+    transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE transaction_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     transaction_id VARCHAR(50) NOT NULL,
     customer_name VARCHAR(200) NOT NULL,
@@ -39,6 +49,3 @@ CREATE TABLE transaction_items (
     FOREIGN KEY (transaction_id) REFERENCES transactions(transaction_id),
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
-
-ALTER TABLE transactions
-ADD COLUMN IF NOT EXISTS total DECIMAL(10,2) NOT NULL DEFAULT 0.00;
