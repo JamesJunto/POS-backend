@@ -28,16 +28,6 @@ CREATE TABLE transactions (
     transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE transaction_items (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    transaction_id VARCHAR(50) NOT NULL,
-    customer_name VARCHAR(200) NOT NULL,
-    cash  DECIMAL(10,2) NOT NULL,
-    total DECIMAL(10,2) NOT NULL,
-    change_amount DECIMAL(10,2) NOT NULL
-    transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP
-    
-);
 
 CREATE TABLE transaction_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
