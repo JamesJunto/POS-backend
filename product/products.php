@@ -7,14 +7,21 @@ require_once 'products_function.php';
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         $products = getProducts($conn);
-        echo json_encode($products);
+        if (!$products && $conn->error) {
+            http_response_code(500);
+            echo json_encode(["error" => "Database error: " . $conn->error]);
+        } else {
+            echo json_encode($products);
+        }
         break;
     case 'POST':
         $data = json_decode(file_get_contents("php://input"), true);
-        if (addProduct($conn, $data)) {
+        $result = addProduct($conn, $data);
+        if ($result) {
             echo json_encode(["message" => "Product added successfully"]);
         } else {
-            echo json_encode(["message" => "Failed to add product"]);
+            http_response_code(500);
+            echo json_encode(["error" => "Failed to add product: " . $conn->error]);
         }
         break;
     case 'DELETE':
