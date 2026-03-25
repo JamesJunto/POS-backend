@@ -4,7 +4,7 @@
   require_once("../cors.php");
 
     function getProducts($conn) {
-        $sql = "SELECT * FROM products WHERE status = 1";
+        $sql = "SELECT id, NAME as name, category, price, stock, STATUS as status FROM products WHERE status = 1";
         $result = $conn->query($sql);
         $products = [];
         if ($result->num_rows > 0) {
@@ -18,13 +18,13 @@
     function addProduct($conn, $data) {
         $name = $data['name'];
         $category = $data['category'];
-        $price = $data['price'];
-        $stock = $data['stock'];
+        $price = (float) $data['price'];
+        $stock = (int) $data['stock'];
 
         $sql = "INSERT INTO products (name, category, price, stock) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
 
-        $stmt->bind_param("ssss", $name, $category, $price, $stock);
+        $stmt->bind_param("ssdi", $name, $category, $price, $stock);
         if ($stmt->execute() === TRUE) {
             return true;
         } else {
@@ -79,15 +79,15 @@
     }
 
     function updateProduct($conn, $data){
-        $id = $data['id'];
+        $id = (int) $data['id'];
         $name = $data['name'];
         $category = $data['category'];
-        $price = $data['price'];
-        $stock = $data['stock'];
+        $price = (float) $data['price'];
+        $stock = (int) $data['stock'];
 
         $sql = "UPDATE products SET name=?, category=?, price=?, stock=? WHERE id=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssss", $name, $category, $price, $stock, $id);
+        $stmt->bind_param("ssdii", $name, $category, $price, $stock, $id);
         if ($stmt->execute() === TRUE) {
             return true;
         } else {
