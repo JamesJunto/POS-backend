@@ -17,7 +17,7 @@ function getRecentTransactions($conn)
             FROM transactions t
             JOIN transaction_items ti ON t.transaction_id = ti.transaction_id
             JOIN products p ON ti.product_id = p.id
-            ORDER BY t.transaction_id DESC";
+            ORDER BY t.transaction_date DESC";
 
     $result = $conn->query($sql);
     $transactions = [];
@@ -61,8 +61,6 @@ function getRecentTransactions($conn)
             $item['quantity']
         );
         $stmtItem->execute();
-        
-        
 
         $newStock = $item['stock'];
         $updateStock = $conn->prepare("UPDATE products SET stock = ? WHERE id = ?");
