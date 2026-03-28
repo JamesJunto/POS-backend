@@ -45,4 +45,4 @@ CREATE EVENT IF NOT EXISTS delete_weekly_transaction
 ON SCHEDULE EVERY 1 HOUR 
 DO
 DELETE FROM transactions
-WHERE transaction_date < NOW() - INTERVAL 7 DAY;
+WHERE transaction_date < NOW() - INTERVAL 30 DAY;
