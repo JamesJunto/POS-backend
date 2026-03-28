@@ -44,5 +44,3 @@ switch ($_SERVER['REQUEST_METHOD']) {
     default:
         echo json_encode(["message" => "Method Not Allowed"]);
 }
-
-

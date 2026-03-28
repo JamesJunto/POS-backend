@@ -28,7 +28,6 @@ CREATE TABLE transactions (
     transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-
 CREATE TABLE transaction_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     transaction_id VARCHAR(50) NOT NULL,
@@ -39,3 +38,11 @@ CREATE TABLE transaction_items (
     FOREIGN KEY (transaction_id) REFERENCES transactions(transaction_id),
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
+
+SET GLOBAL event_scheduler = ON;
+
+CREATE EVENT IF NOT EXISTS delete_weekly_transaction
+ON SCHEDULE EVERY 1 HOUR 
+DO
+DELETE FROM transactions
+WHERE transaction_date < NOW() - INTERVAL 7 DAY;
